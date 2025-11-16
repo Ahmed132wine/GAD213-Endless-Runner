@@ -7,6 +7,7 @@ public class PlayerRun2 : MonoBehaviour
     public float speed = 5f;
     public float acceleration = 1.2f;
     public float jumpHeight = 7f;
+    public CoinManager cm;
 
     // dash params
     [SerializeField] private float dashingPower = 24f;
@@ -84,6 +85,15 @@ public class PlayerRun2 : MonoBehaviour
     {
         if (other.collider.CompareTag("Ground"))
             isGround = true;
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("collectable"))
+        {
+            Destroy(other.gameObject);
+            cm.AddFood(1);
+        }
     }
 }
 

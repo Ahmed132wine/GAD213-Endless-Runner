@@ -29,7 +29,7 @@ public class Follow : MonoBehaviour
         
         float newX = Mathf.Lerp(transform.position.x, desiredX, smooth * Time.deltaTime);
 
-        // Apply the position while locking Y and Z
+        
         transform.position = new Vector3(newX, fixedY, fixedZ);
     }
 }
