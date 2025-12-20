@@ -8,6 +8,7 @@ public class PlayerRun2 : MonoBehaviour
     public float acceleration = 1.2f;
     public float jumpHeight = 7f;
     public CoinManager cm;
+    [HideInInspector] public float speedMultiplier = 1f;
 
     // dash params
     [SerializeField] private float dashingPower = 24f;
@@ -46,7 +47,7 @@ public class PlayerRun2 : MonoBehaviour
         if (isDashing) return;
 
         
-        rb.velocity = new Vector2(speed, rb.velocity.y);
+        rb.velocity = new Vector2(speed * speedMultiplier, rb.velocity.y);
     }
 
     void Jump()
@@ -85,6 +86,7 @@ public class PlayerRun2 : MonoBehaviour
     {
         if (other.collider.CompareTag("Ground"))
             isGround = true;
+        FindObjectOfType<Spawner>().SpawnGround();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -93,8 +95,30 @@ public class PlayerRun2 : MonoBehaviour
         {
             Destroy(other.gameObject);
             cm.AddFood(1);
+            return;
+        }
+        if (other.gameObject.CompareTag("GoldenApple"))
+        {
+            var pickup = other.GetComponent<PowerUpPickup>();
+            var controller = GetComponent<PlayerPowerupController>();
+            if (pickup && controller)
+            {
+                controller.ApplyPowerup(pickup.powerUp);
+                Destroy(other.gameObject);
+            }
+        }
+
+        
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("GroundParent"))
+        {
+            Destroy(other.gameObject, 5f);
         }
     }
+   
 }
 
 
